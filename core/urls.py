@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.urls import path
-from core.authentication import CustomAdminSite
 
+from core.views import KeycloakCallbackAPIView
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-    path('admin/', CustomAdminSite().urls),
+    path('admin/', admin.site.urls),
+    path('keycloak_callback/', KeycloakCallbackAPIView.as_view()),
 ]
+
+admin.site.login_template = 'admin/custom_login.html'
+admin.site.site_header = 'Custom django administration'
