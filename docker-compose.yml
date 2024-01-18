@@ -1,0 +1,45 @@
+version: "3.9"
+
+volumes:
+  postgres_data:
+    driver: local
+
+services:
+#  app:
+#    environment:
+#      DJANGO_SETTINGS_MODULE: core.settings
+#    command: "poetry run python manage.py runserver 0.0.0.0:8000"
+#    build: .
+#    volumes:
+#      - .:/app
+#    ports:
+#      - "8000:8000"
+#    depends_on:
+#      - db
+
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/ var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:legacy
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: db
+      DB_DATABASE: postgres
+      DB_USER: postgres
+      DB_SCHEMA: public
+      DB_PASSWORD: postgres
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
